@@ -1,4 +1,4 @@
-#Sailing Environment
+# Sailing Environment
 
 Current iteration of the physics environment for a reinforcement learning project. With a graphical rendering implemented with pygame.
 
