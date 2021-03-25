@@ -117,7 +117,7 @@ class TileEngine:
 
         width, height = size
 
-        if self.n_columns < self.n_rows:
+        if width > height:
             tile_side_length = height // self.n_rows
             blit_height = height
             blit_width = self.n_columns * tile_side_length

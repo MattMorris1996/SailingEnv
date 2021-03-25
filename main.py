@@ -5,7 +5,7 @@ import sys
 import sailboat
 import tileengine
 
-SCALE = 5
+SCALE = 3
 
 class Env:
     def __init__(self):
@@ -13,7 +13,7 @@ class Env:
         self.clock = pygame.time.Clock()
 
         # window size pixels
-        self.window_size = self.win_width, self.win_height = 320 * SCALE, 240 * SCALE
+        self.window_size = self.win_width, self.win_height = 350 * SCALE, 200 * SCALE
 
         self.screen = pygame.display.set_mode(self.window_size)
 
@@ -35,7 +35,7 @@ class Env:
         Returns:
             reward:
         """
-        self.boat.step(np.array([10, 0]), t=1)
+        self.boat.step(np.array([10, 10]), t=1)
         # ToDo: Collisions
         # ToDo: GoalChecking
         # ToDo: Reward Function

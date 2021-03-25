@@ -25,9 +25,9 @@ class SailBoat(object):
         self.angular_velocity = 0
 
         self.rudder_range = 90
-        self.rudder_angle = 1
+        self.rudder_angle = 0
 
-        self.sail_angle = 0
+        self.sail_angle = -5
         self.heading_angle = 0
 
         self.mass = 10
