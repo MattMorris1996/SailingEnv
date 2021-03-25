@@ -8,6 +8,7 @@ import wind_effect
 
 SCALE = 4
 
+
 class Env:
     def __init__(self):
         pygame.init()
@@ -36,7 +37,7 @@ class Env:
         Returns:
             reward:
         """
-        self.boat.step(np.array([10, 0]), t=1/120)
+        self.boat.step(np.array([10, 0]), t=1 / 120)
 
         # ToDo: Collisions Simple collision checking with no impact on boat physics, resets boat to a defined
         #  starting position. Returns negative reward (Same as RaceTrack Env).
@@ -48,7 +49,7 @@ class Env:
         #   Some negative reward signal based on distance travelled or time taken
 
         # ToDo: Vision
-        #   How will agent avoid obstacles ? is returning the pixel surface sufficient ?\
+        #   How will agent avoid obstacles ? is returning the pixel surface sufficient ?
 
         state = None
         reward = None
@@ -78,5 +79,7 @@ if __name__ == "__main__":
     env = Env()
 
     while True:
-        env.step()
+        state, reward, terminal = env.step()
         env.render()
+        if terminal:
+            break
