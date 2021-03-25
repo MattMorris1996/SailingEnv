@@ -6,8 +6,7 @@ import sailboat
 import tileengine
 import wind_effect
 
-SCALE = 5
-
+SCALE = 4
 
 class Env:
     def __init__(self):
@@ -37,10 +36,25 @@ class Env:
         Returns:
             reward:
         """
-        self.boat.step(np.array([10, 10]), t=1/120)
-        # ToDo: Collisions
+        self.boat.step(np.array([10, 0]), t=1/120)
+
+        # ToDo: Collisions Simple collision checking with no impact on boat physics, resets boat to a defined
+        #  starting position. Returns negative reward (Same as RaceTrack Env).
+
         # ToDo: GoalChecking
+        #   Check agent has reached goal position determine reward and end episode
+
         # ToDo: Reward Function
+        #   Some negative reward signal based on distance travelled or time taken
+
+        # ToDo: Vision
+        #   How will agent avoid obstacles ? is returning the pixel surface sufficient ?\
+
+        state = None
+        reward = None
+        terminal = None
+
+        return state, reward, terminal
 
     def render(self, framerate=120):
         """Renders environment"""
@@ -51,7 +65,7 @@ class Env:
                 sys.exit()
 
         # Render boat onto working surface of the world with correct scale
-        self.boat.render(self.world.working_surface, self.world.scale())
+        self.boat.render(self.world.working_surface, self.world.scale(spherical=True))
         self.world.render(self.screen)
 
         # Update screen and lock framerate

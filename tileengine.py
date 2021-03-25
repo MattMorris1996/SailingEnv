@@ -91,7 +91,7 @@ class TileEngine:
         return tile_textures
 
     def get_collidables(self):
-        # ToDo:
+        # ToDo: return list of collidable rectangles
         """Returns a list of rect objects detailing the location of a collidable tile square
             Returns:
                 collidables: a list of rect objects corresponding to the collidable tile squares
