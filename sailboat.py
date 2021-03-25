@@ -22,9 +22,9 @@ class SailBoat(object):
         self.angular_velocity = 0
 
         self.rudder_range = 90
-        self.rudder_angle = 0
+        self.rudder_angle = 3
 
-        self.sail_angle = -5
+        self.sail_angle = 90
         self.heading_angle = 0
 
         self.mass = 10
@@ -91,11 +91,11 @@ class SailBoat(object):
         sail_surface = pygame.Surface(boat_size)
         sail_surface.fill((160, 160, 228), rect=fill_rect)
 
-        boat_surface = pygame.transform.rotozoom(boat_surface, 90 - self.heading_angle, 1)
+        boat_surface = pygame.transform.rotate(boat_surface, 90 - self.heading_angle)
         rotated_boat_surface_rect = boat_surface.get_rect(center=boat_pivot)
 
-        sail_surface = pygame.transform.rotozoom(sail_surface, 90 - self.heading_angle, 1)
-        sail_surface = pygame.transform.rotozoom(sail_surface, 90 - self.sail_angle, 1)
+        sail_surface = pygame.transform.rotate(sail_surface, 90 - self.heading_angle)
+        sail_surface = pygame.transform.rotate(sail_surface, 90 - self.sail_angle)
         sail_surface_rect = boat_surface.get_rect(center=boat_pivot)
 
         sail_surface.set_colorkey((0, 0, 0))

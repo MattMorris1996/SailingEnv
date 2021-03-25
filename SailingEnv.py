@@ -6,7 +6,8 @@ import sailboat
 import tileengine
 import wind_effect
 
-SCALE = 3
+SCALE = 5
+
 
 class Env:
     def __init__(self):
@@ -19,7 +20,7 @@ class Env:
         self.screen = pygame.display.set_mode(self.window_size)
 
         # World size meters per block
-        self.meters_per_block = 100
+        self.meters_per_block = 0.5
 
         self.world = tileengine.TileEngine('../SailingSim/default-world', self.window_size, self.meters_per_block)
 
@@ -36,7 +37,7 @@ class Env:
         Returns:
             reward:
         """
-        self.boat.step(np.array([10, 10]), t=1)
+        self.boat.step(np.array([10, 10]), t=1/120)
         # ToDo: Collisions
         # ToDo: GoalChecking
         # ToDo: Reward Function
