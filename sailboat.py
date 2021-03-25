@@ -13,9 +13,6 @@ class SailBoat(object):
 
         """
 
-        # ToDo: Linear Scale Function
-        #   currently world units is in pixels, which creates problems when scale of world is changed
-
         self.position = np.array(position, dtype=np.float64)
 
         self.velocity = np.zeros(2)
