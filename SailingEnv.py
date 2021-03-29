@@ -4,7 +4,6 @@ import sys
 
 import sailboat
 import tileengine
-import wind_effect
 
 SCALE = 4
 
