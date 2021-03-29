@@ -1,3 +1,5 @@
 0,color:(0, 0, 0)
 1,texture:water.png
 2,texture:grass.png
+3,texture:img.png
+4,texture:water.png

@@ -13,12 +13,33 @@ class TileEngine:
         self.n_rows, self.n_columns = self.tiles.shape
         self.meter_per_block = meters_per_block
 
-        self.tile_rect_map = [[pygame.Rect(x * 256, y * 256, 256, 256) for x in range(self.n_columns)] for y in
-                              range(self.n_rows)]
+        self.world_size = self.n_columns * self.meter_per_block, self.n_rows * self.meter_per_block
+
+        self.resolution = 256
+
+        self.tile_render_rect_map = [
+            [
+                pygame.Rect(x * self.resolution, y * self.resolution, self.resolution, self.resolution)
+                for x in range(self.n_columns)
+            ] for y in range(self.n_rows)
+        ]
+
+        self.tile_rect_map = [
+            [
+                pygame.Rect(
+                    x * self.meter_per_block, y * self.meter_per_block, self.meter_per_block, self.meter_per_block
+                )
+                for x in range(self.n_columns)
+            ] for y in range(self.n_rows)
+        ]
+
+        self.collidables_id = [2]
+        self.goal_id = [3]
+
+        self.hit_boxes = self.get_hitbox(self.collidables_id)
+        self.goal_boxes = self.get_hitbox(self.goal_id)
 
         self.tile_textures = self._init_tile_dict(path_dir + '/tiles.txt')
-
-        self.collidables_id = set()
 
         self.render_rect, self.world_surface = self._generate_surface(size)
 
@@ -29,7 +50,7 @@ class TileEngine:
     def scale(self, spherical=True):
         """Returns a world scale function, converting meters into a pixel location"""
         window_width, window_height = self.surface_size
-        world_width, world_height = self.n_columns*self.meter_per_block, self.meter_per_block*self.n_rows
+        world_width, world_height = self.n_columns * self.meter_per_block, self.meter_per_block * self.n_rows
 
         def s_scale(x, y):
             return (x * window_width / world_width) % window_width, (y * window_height / world_height) % window_height
@@ -90,23 +111,32 @@ class TileEngine:
 
         return tile_textures
 
-    def get_collidables(self):
-        # ToDo: return list of collidable rectangles
+    def get_hitbox(self, ids):
         """Returns a list of rect objects detailing the location of a collidable tile square
             Returns:
                 collidables: a list of rect objects corresponding to the collidable tile squares
         """
-        pass
 
-    def _generate_surface(self, size):
-        """Generate world surface from world data"""
-
-        world_surface = pygame.Surface((self.n_columns * 256, self.n_rows * 256))
+        rects = []
 
         for y in range(self.n_rows):
             for x in range(self.n_columns):
                 tile_id = self.tiles[y][x]
                 rect = self.tile_rect_map[y][x]
+                if tile_id in ids:
+                    rects.append(rect)
+        return rects
+
+    def _generate_surface(self, size):
+        """Generate world surface from world data and scale to fit onto the screen"""
+
+        world_surface = pygame.Surface((self.n_columns * 256, self.n_rows * 256))
+
+        # generate surface
+        for y in range(self.n_rows):
+            for x in range(self.n_columns):
+                tile_id = self.tiles[y][x]
+                rect = self.tile_render_rect_map[y][x]
                 fill_type, dat = self.tile_textures[tile_id]
                 if fill_type == 'color':
                     color = dat
@@ -117,6 +147,7 @@ class TileEngine:
 
         width, height = size
 
+        # Scale world surface to fit into screen
         if width > height:
             tile_side_length = height // self.n_rows
             blit_height = height

@@ -29,6 +29,18 @@ class SailBoat(object):
 
         self.mass = 10
 
+    def reset(self):
+        self.velocity = np.zeros(2)
+        self.acceleration = np.zeros(2)
+        self.angular_acceleration = 0
+        self.angular_velocity = 0
+
+        self.rudder_range = 90
+        self.rudder_range = 3
+
+        self.sail_angle = 90
+        self.heading_angle = 0
+
     def step(self, wind_force, t=1):
         """Step function takes a force on the boat due to wind vector, and updates the boats physics properties
         based on the time step t
@@ -53,6 +65,13 @@ class SailBoat(object):
         self.angular_acceleration = self.rudder_angle - self.angular_velocity
         self.angular_velocity += self.angular_acceleration * t
         self.heading_angle += self.angular_velocity * t
+
+    def boat_hit_box(self, size):
+        width, height = size
+        boat_size = boat_width, boat_height = 2, 2
+        boat_hit_box = pygame.Rect(0, 0, boat_width, boat_height)
+        boat_hit_box.center = self.position[0] % width, self.position[1] % height
+        return boat_hit_box
 
     def render(self, world_surface: pygame.Surface, linear_scale):
         """Takes a python surface and renders the current state of the boat, depicting direction of travel,

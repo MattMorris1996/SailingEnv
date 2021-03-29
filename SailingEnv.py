@@ -20,7 +20,7 @@ class Env:
         self.screen = pygame.display.set_mode(self.window_size)
 
         # World size meters per block
-        self.meters_per_block = 0.5
+        self.meters_per_block = 1
 
         self.world = tileengine.TileEngine('../SailingSim/default-world', self.window_size, self.meters_per_block)
 
@@ -29,35 +29,47 @@ class Env:
     def reset(self):
         pass
 
-    def step(self):
+    def step(self, rudder_position=None, sail_position=None):
         """Step function reads agent input observes rewards
         Args:
-            rudder_positions:
-            sail_position:
+            :param sail_position:
+            :param rudder_position:
         Returns:
+            state: ?
             reward:
+            terminal:
         """
+        reward = 0
+        terminal = False
+
+        # Step through boat physics at time t
         self.boat.step(np.array([10, 0]), t=1 / 120)
 
-        # ToDo: Collisions Simple collision checking with no impact on boat physics, resets boat to a defined
-        #  starting position. Returns negative reward (Same as RaceTrack Env).
+        boat_hit_box = self.boat.boat_hit_box(self.world.world_size)
 
-        # ToDo: GoalChecking
-        #   Check agent has reached goal position determine reward and end episode
+        collision_boxes = self.world.hit_boxes
+        hit_index = boat_hit_box.collidelist(collision_boxes)
+        if hit_index > 0:
+            self.boat.position = np.array([1600, 1200], dtype=np.float64)
+            self.boat.reset()
+            reward = -100
 
-        # ToDo: Reward Function
-        #   Some negative reward signal based on distance travelled or time taken
+        goal_boxes = self.world.goal_boxes
+        goal_hit_index = boat_hit_box.collidelist(goal_boxes)
+        if goal_hit_index > 0:
+            self.boat.position = np.array([1600, 1200], dtype=np.float64)
+            self.boat.reset()
+            reward = 100
+            terminal = True
 
         # ToDo: Vision
         #   How will agent avoid obstacles ? is returning the pixel surface sufficient ?
 
         state = None
-        reward = None
-        terminal = None
 
         return state, reward, terminal
 
-    def render(self, framerate=120):
+    def render(self, framerate=250):
         """Renders environment"""
 
         for event in pygame.event.get():
@@ -68,6 +80,8 @@ class Env:
         # Render boat onto working surface of the world with correct scale
         self.boat.render(self.world.working_surface, self.world.scale(spherical=True))
         self.world.render(self.screen)
+
+        print(self.clock.get_fps())
 
         # Update screen and lock framerate
         self.clock.tick()
